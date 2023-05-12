@@ -17,7 +17,6 @@ sequelize.authenticate().then(function(err) {
 }).catch(function(err) {
     console.log('unable to connect', err)
 })
-
 app.use('/', productRouter)
 
 app.listen(process.env.SERVER_PORT, () => { console.log('Server Running ' + process.env.SERVER_PORT) });
