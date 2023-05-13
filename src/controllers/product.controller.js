@@ -12,11 +12,11 @@ exports.getDetailProducts = async (req, res, next) => {
 
         if (title || author || price || genre) {
             whereClause = {
-                [Op.or]: []
+                [Op.and]: []
             };
 
             if (title) {
-                whereClause[Op.or].push({
+                whereClause[Op.and].push({
                     title_book: {
                         [Op.like]: `%${title}%`
                     }
@@ -24,7 +24,7 @@ exports.getDetailProducts = async (req, res, next) => {
             }
 
             if (author) {
-                whereClause[Op.or].push({
+                whereClause[Op.and].push({
                     author: {
                         [Op.like]: `%${author}%`
                     }
@@ -32,14 +32,14 @@ exports.getDetailProducts = async (req, res, next) => {
             }
 
             if (price) {
-                whereClause[Op.or].push({
+                whereClause[Op.and].push({
                     price: {
-                        [Op.like]: `%${price}%`
+                        [Op.lte]: price
                     }
                 });
             }
             if (genre) {
-                whereClause[Op.or].push({
+                whereClause[Op.and].push({
                     genre: {
                         [Op.like]: `%${genre}%`
                     }
