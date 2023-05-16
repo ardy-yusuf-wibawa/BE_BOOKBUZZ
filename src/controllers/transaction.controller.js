@@ -1,13 +1,19 @@
-const { transaction } = require('../models')
+const { transaction, transaction_detail } = require('../models')
 const { Op } = require('sequelize')
+const { incrementOrderNumber } = require("../helpers/utils")
 
 exports.getDetailTransaction = async (req, res, next) => {
   try {
-    const id = req.params.id;
+
     const transactions = await transaction.findAll({
-      where: {
-        nomor_order: id
-      }
+      include: [
+        {
+          model: transaction_detail,
+          as: 'order',
+          attributes: ['product_id', 'quantity']
+        }
+      ]
+
     });
 
     res.status(200).json({
@@ -24,17 +30,32 @@ exports.getDetailTransaction = async (req, res, next) => {
 
 exports.postTransaction = async (req, res) => {
   try {
+    const { user_id, total_price, product } = req.body;
+
     const createTransaction = await transaction.create({
-      product_id: req.body.product_id,
-      quantity: req.body.quantity,
-      nomor_order: req.body.nomor_order,
+      user_id: user_id,
+      order_id: incrementOrderNumber(),
+      total_price: total_price,
     });
 
-    console.log(createTransaction);
+    const transactionId = createTransaction.order_id
+
+    const transactionDetails = product.map(({ product_id, quantity }) => {
+      return {
+        order_id: transactionId,
+        product_id: product_id,
+        quantity: quantity,
+      };
+    });
+
+    // Bulk insert the transaction details into the transaction_details table
+    await transaction_detail.bulkCreate(transactionDetails);
+
+    console.log({ createTransaction: transactionDetails });
 
     res.status(201).json({
       message: 'Successfully added transaction',
-      data: createTransaction,
+      data: createTransaction, transactionDetails
     });
   } catch (error) {
     console.error('Error creating a new transaction:', error);

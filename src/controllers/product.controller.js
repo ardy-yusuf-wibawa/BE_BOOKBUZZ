@@ -1,4 +1,4 @@
-const { product } = require('../models');
+const { product, genre_detail, review_detail, review } = require('../models');
 const { Op } = require('sequelize');
 
 exports.getDetailProducts = async (req, res, next) => {
@@ -40,15 +40,42 @@ exports.getDetailProducts = async (req, res, next) => {
             }
             if (genre) {
                 whereClause[Op.and].push({
-                    genre: {
-                        [Op.like]: `%${genre}%`
-                    }
+                    [Op.or]: [
+                        {
+                            genre_id: {
+                                [Op.like]: `%${genre}%`
+                            }
+                        },
+                        {
+                            '$genre.genre_name$': {
+                                [Op.like]: `%${genre}%`
+                            }
+                        }
+                    ]
                 });
             }
         }
-
         const getProducts = await product.findAll({
-            where: whereClause
+            where: whereClause,
+            include: [
+                {
+                    model: genre_detail,
+                    as: 'genre',
+                    attributes: ['genre_id', 'genre_name']
+                },
+                {
+                    model: review,
+                    as: 'review',
+                    attributes: ['review_id'],
+                    include: [
+                        {
+                            model: review_detail,
+                            as: 'views',
+                            attributes: ['rating', 'comment']
+                        },
+                    ]
+                }
+            ]
         });
 
         if (getProducts.length === 0) {
@@ -57,8 +84,23 @@ exports.getDetailProducts = async (req, res, next) => {
             });
         }
 
+        // const formattedProducts = getProducts.map((product) => ({
+        //     id: product.id,
+        //     product_id: product.product_id,
+        //     title_book: product.title_book,
+        //     author: product.author,
+        //     genre: product.genre ? product.genre.genre_name : null, // Access the genre_name attribute
+        //     description: product.description,
+        //     thumbnail: product.thumbnail,
+        //     price: product.price,
+        //     stock: product.stock,
+        //     review_id: product.review_id,
+        //     createdAt: product.createdAt,
+        //     updatedAt: product.updatedAt
+        // }));
+
         res.status(200).send({
-            message: `Data retrieved`,
+            message: 'Data retrieved',
             data: getProducts
         });
     } catch (error) {
