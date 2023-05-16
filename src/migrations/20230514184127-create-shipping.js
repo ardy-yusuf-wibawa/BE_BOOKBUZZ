@@ -2,53 +2,45 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('products', {
+    await queryInterface.createTable('shippings', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      product_id: {
-        type: Sequelize.STRING,
+      user_id: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-        primaryKey: true
+        unique:true
       },
-      title_book: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      author: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      genre_id: {
+      phone_number: {
         type: Sequelize.INTEGER,
         allowNull: false
-
       },
-      description: {
+      country: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      address: {
         type: Sequelize.TEXT,
         allowNull: false
       },
-      thumbnail: {
-        type: Sequelize.STRING
-      },
-      price: {
-        type: Sequelize.INTEGER,
+      apartment: {
+        type: Sequelize.STRING,
         allowNull: false
       },
-      stock: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        DefaultValue: 0
+      city: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      review_id: {
+      province: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      postal_code: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-        DefaultValue: 0
-
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -61,6 +53,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('products');
+    await queryInterface.dropTable('shippings');
   }
 };

@@ -2,27 +2,24 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('transactions', {
+    await queryInterface.createTable('transaction_details', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-       
+      product_id: {
+        type: Sequelize.STRING,
+        unique: true
       },
       order_id: {
         type: Sequelize.STRING,
-        primaryKey: true
+        unique: true
       },
-      total_price: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+      quantity: {
+        type: Sequelize.INTEGER
       },
-
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -32,11 +29,8 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-
-    // Add the validation constraint
-
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('transactions');
+    await queryInterface.dropTable('transaction_details');
   }
 };
