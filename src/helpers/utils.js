@@ -10,3 +10,6 @@ exports.incrementOrderNumber = () => {
   const paddedNumber = orderNumber.toString().padStart(4, '0');
   return `${prefix}${paddedNumber}`;
 };
+
+
+// randomNumber = Math.floor(Math.random() * 1000)

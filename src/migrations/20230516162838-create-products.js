@@ -10,45 +10,31 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       product_id: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        primaryKey: true
+        type: Sequelize.STRING
       },
       title_book: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        type: Sequelize.STRING
       },
       author: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       genre_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-
+        type: Sequelize.INTEGER
       },
       description: {
-        type: Sequelize.TEXT,
-        allowNull: false
+        type: Sequelize.TEXT
       },
       thumbnail: {
         type: Sequelize.STRING
       },
       price: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: Sequelize.INTEGER
       },
       stock: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        DefaultValue: 0
+        type: Sequelize.INTEGER
       },
       review_id: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        DefaultValue: 0
-
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
