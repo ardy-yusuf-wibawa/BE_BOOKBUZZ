@@ -5,9 +5,10 @@ const { sequelize } = require('./models')
 
 // const router = require('./routes/router');
 const productRouter = require('./routes/product.router')
-const transactionRouter = require('./routes/transaction.router')
 const userEndPoint = require('./routes/users.router')
-const cartRouter = require('./routes/cart.router')
+const orderRouter = require('./routes/order.router')
+const historyDetail = require('./routes/history.router')
+const wishlistList = require('./routes/wishlist.router')
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -21,8 +22,9 @@ sequelize.authenticate().then(function(err) {
     console.log('unable to connect', err)
 })
 app.use('/', productRouter)
-app.use('/', transactionRouter)
 app.use('/', userEndPoint)
-app.use('/', cartRouter )
+app.use('/', orderRouter)
+app.use('/', historyDetail)
+app.use('/', wishlistList)
 
 app.listen(process.env.SERVER_PORT, () => { console.log('Server Running ' + process.env.SERVER_PORT) });

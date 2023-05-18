@@ -1,4 +1,4 @@
-const { product, genre_detail, review_detail, review } = require('../models');
+const { products, genres_detail, reviews_detail, reviews } = require('../models');
 const { Op } = require('sequelize');
 
 exports.getDetailProducts = async (req, res, next) => {
@@ -55,21 +55,21 @@ exports.getDetailProducts = async (req, res, next) => {
                 });
             }
         }
-        const getProducts = await product.findAll({
+        const getProducts = await products.findAll({
             where: whereClause,
             include: [
                 {
-                    model: genre_detail,
+                    model: genres_detail,
                     as: 'genre',
                     attributes: ['genre_id', 'genre_name']
                 },
                 {
-                    model: review,
+                    model: reviews,
                     as: 'review',
                     attributes: ['review_id'],
                     include: [
                         {
-                            model: review_detail,
+                            model: reviews_detail,
                             as: 'views',
                             attributes: ['rating', 'comment']
                         },
@@ -80,24 +80,9 @@ exports.getDetailProducts = async (req, res, next) => {
 
         if (getProducts.length === 0) {
             return res.status(404).send({
-                message: `No products found with the provided: title=${title}, author=${author}, price=${price}`
+                message: `No products found`
             });
         }
-
-        // const formattedProducts = getProducts.map((product) => ({
-        //     id: product.id,
-        //     product_id: product.product_id,
-        //     title_book: product.title_book,
-        //     author: product.author,
-        //     genre: product.genre ? product.genre.genre_name : null, // Access the genre_name attribute
-        //     description: product.description,
-        //     thumbnail: product.thumbnail,
-        //     price: product.price,
-        //     stock: product.stock,
-        //     review_id: product.review_id,
-        //     createdAt: product.createdAt,
-        //     updatedAt: product.updatedAt
-        // }));
 
         res.status(200).send({
             message: 'Data retrieved',
@@ -109,3 +94,21 @@ exports.getDetailProducts = async (req, res, next) => {
         });
     }
 };
+
+exports.getProductsList = async (req, res, next) => {
+
+    try {
+        const getProductDetail = await products.findAll({})
+
+        res.status(200).send({
+            message: 'Data retrieved',
+            data: getProductDetail
+        });
+
+    } catch (error) {
+        return res.status(500).send({
+            error: error.message || 'Internal server error'
+        });
+
+    }
+} 
