@@ -2,18 +2,18 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { users } = require('../models');
 
-
 exports.userCreate = async (req, res, next) => {
     try {
-        const inputPassword = req.body
-        const hashPassword = await bcrypt.hashSync(inputPassword.password, 8)
+        const inputPassword = req.body;
+        const saltRounds = 8; // Define the number of salt rounds
+        const hashPassword = await bcrypt.hashSync(inputPassword.password, saltRounds);
         const createUser = await users.create({
             fullname: req.body.fullname,
             username: req.body.username,
             email: req.body.email,
             password: hashPassword,
         });
-    
+
         console.log(createUser);
 
         res.status(201).json({
@@ -46,7 +46,7 @@ exports.login = async (req, res, next) => {
         if (comparePassword) {
             const token = jwt.sign({ id: getUser.dataValues.id, email: getUser.dataValues.email }, process.env.JWT_SECRET, { expiresIn: 3600 })
             // Set JWT token as a cookie
-            res.cookie('jwt', token, { 
+            res.cookie('jwt', token, {
                 maxAge: 3600000, // Expires in 1 hour
                 httpOnly: true, // Cookie is only accessible by the web server
                 secure: true // Cookie is only sent over HTTPS if the website has HTTPS enabled
@@ -58,7 +58,7 @@ exports.login = async (req, res, next) => {
         } else {
             return res.status(400).send(`invalid password`)
         }
-        
+
     } catch (error) {
         return res.status(500).send({
             err: error

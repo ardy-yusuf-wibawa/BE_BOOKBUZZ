@@ -66,7 +66,7 @@ exports.getDetailProducts = async (req, res, next) => {
                 {
                     model: reviews,
                     as: 'review',
-                    attributes: ['review_id'],
+                    attributes: ['review_id', 'avgRating'],
                     include: [
                         {
                             model: reviews_detail,
