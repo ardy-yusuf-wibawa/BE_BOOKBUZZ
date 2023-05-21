@@ -1,0 +1,162 @@
+npx sequelize-cli model:generate --name orders_detail --attributes order_id:string,product_id:string,quantity:INTEGER
+
+npx sequelize-cli model:generate --name orders --attributes order_id:STRING,user_id:string
+
+npx sequelize-cli model:generate --name genres_detail --attributes genre_id:INTEGER,genre_name:string
+
+npx sequelize-cli model:generate --name historys --attributes user_id:INTEGER,order_id:string,is_checkout:INTEGER
+
+npx sequelize-cli model:generate --name products --attributes product_id:STRING,title_book:STRING,author:STRING,genre_id:INTEGER,description:STRING,thumbnail:STRING,price:INTEGER,stock:INTEGER,review_id:INTEGER
+
+npx sequelize-cli model:generate --name reviews_detail --attributes review_id:INTEGER,user_id:INTEGER,rating:INTEGER,comment:TEXT
+
+npx sequelize-cli model:generate --name reviews --attributes review_id:INTEGER,product_id:string
+
+npx sequelize-cli model:generate --name shippings --attributes  user_id:INTEGER,phone_number:INTEGER,country:STRING,address:TEXT,apartment:STRING,city:STRING,province:STRING,postal_code:INTEGER
+
+npx sequelize-cli model:generate --name users --attributes user_id:INTEGER,fullname:string,username:string,email:string,password:string
+
+npx sequelize-cli model:generate --name wishlist --attributes user_id:INTEGER,product_id:string,quantity:INTEGER
+
+
+
+npx sequelize-cli db:migrate
+
+
+
+
+'use strict';
+const {
+  Model
+} = require('sequelize');
+const orders_detail = require('./orders_detail');
+module.exports = (sequelize, DataTypes) => {
+  class users extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+      users.belongsTo(models.orders, {
+        foreignKey: 'order_id',
+        as: 'orders'
+      });
+      // users.belongsToMany(models.orders_detail, {
+      //   through: 'orders',
+      //   foreignKey: 'order_id',
+      //   as: 'order_details'
+      // });
+    }
+  }
+  users.init({
+    fullname: DataTypes.STRING,
+    username: DataTypes.STRING,
+    email: DataTypes.STRING,
+    password: DataTypes.STRING
+  }, {
+    sequelize,
+    modelName: 'users',
+  });
+  return users;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'use strict';
+const { Model } = require('sequelize');
+
+module.exports = (sequelize, DataTypes) => {
+  class product extends Model {
+    static associate(models) {
+      // Define associations here
+      product.belongsTo(models.genre_detail, {
+        foreignKey: 'genre_id',
+        as: 'genre'
+      });
+      // product.belongsTo(models.review, {
+      //   foreignKey: 'review_id',
+      //   as: 'review'
+      // });
+      product.hasMany(models.review, {
+        foreignKey: 'review_id',
+        as: 'review'
+      });
+      product.hasMany(models.cart, {
+        foreignKey: 'product_id',
+        as: 'product'
+      });
+
+    }
+  }
+
+  product.init({
+    product_id: DataTypes.STRING,
+    title_book: DataTypes.STRING,
+    author: DataTypes.STRING,
+    genre_id: DataTypes.INTEGER,
+    description: DataTypes.STRING,
+    thumbnail: DataTypes.STRING,
+    price: DataTypes.INTEGER,
+    stock: DataTypes.INTEGER,
+    review_id: DataTypes.INTEGER,
+
+  }, {
+    sequelize,
+    modelName: 'product',
+  });
+
+  return product;
+};
+
+
+
+
+
+
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class review extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+      review.hasMany(models.review_detail, {
+        foreignKey: 'review_id',
+        as: 'views'
+      });
+      review.hasOne(models.product, {
+        foreignKey: 'review_id',
+        as: 'review'
+      });
+    }
+  }
+  review.init({
+    review_id: DataTypes.INTEGER,
+    product_id: DataTypes.STRING
+  }, {
+    sequelize,
+    modelName: 'review',
+  });
+  return review;
+};
