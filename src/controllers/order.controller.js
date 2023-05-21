@@ -4,10 +4,10 @@ const { sequelize } = require('../models');
 
 exports.getOrder = async (req, res, next) => {
     try {
-      const { user_id } = req.body;
+      const { id } = req.params;
   
       const getUser = await orders.findAll({
-        where: { user_id: user_id },
+        where: { id: id },
       });
   
       console.log(getUser);

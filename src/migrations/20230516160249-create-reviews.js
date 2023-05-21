@@ -15,6 +15,14 @@ module.exports = {
       product_id: {
         type: Sequelize.STRING
       },
+      avgRating: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        validate: {
+          min: 0,
+          max: 5
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

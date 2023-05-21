@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   reviews.init({
     review_id: DataTypes.INTEGER,
-    product_id: DataTypes.STRING
+    product_id: DataTypes.STRING,
+    avgRating: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'reviews',
